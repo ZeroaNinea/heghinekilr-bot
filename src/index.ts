@@ -16,6 +16,16 @@ client.once(Events.ClientReady, (readyClient) => {
   console.log(`Bot ID: ${readyClient.user.id}`);
 });
 
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isChatInputCommand()) {
+    return;
+  }
+
+  if (interaction.commandName === "ping") {
+    await interaction.reply("Pong! Heghinekilr Bot is alive! :3");
+  }
+});
+
 client.on(Events.Error, (error) => {
   console.error("Discord client error:", error);
 });
