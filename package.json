@@ -2,10 +2,10 @@
   "name": "ban-migration-bot",
   "version": "0.0.1",
   "description": "Heghine's official Discord bot. It kills her every two hours, and forces her to respawn. It also has a lot of moderation features. And also it's very silly. Heh...",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "start:dev": "nodemon src/index.ts",
+    "start:dev": "tsx watch src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
-    "nodemon": "^3.1.14",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
