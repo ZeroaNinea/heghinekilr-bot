@@ -23,7 +23,7 @@
   ],
   "author": "0a9a",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "discord.js": "^14.27.0",
     "dotenv": "^18.0.9"
