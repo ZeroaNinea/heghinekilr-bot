@@ -1,3 +1,5 @@
-# Ban Migration Bot
+# Heghinekilr Bot
 
-This Discord bot allows to migrate banned users from one server to another.
+Heghine's official Discord bot. It kills her every two hours, and forces her to respawn. It also has a lot of moderation features. And also it's very silly. Heh...
+<br />
+:3
