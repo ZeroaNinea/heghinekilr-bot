@@ -22,7 +22,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   if (interaction.commandName === "ping") {
-    await interaction.reply("Pong! Heghinekilr Bot is alive! :3");
+    await interaction.reply("Pong! Heghinekilr Bot is alive!\n:3");
+  } else if (interaction.commandName === "silly") {
+    await interaction.reply(
+      "Ya, I'm exteremely silly...\n\\*drooling\\*\n:p--",
+    );
   }
 });
 

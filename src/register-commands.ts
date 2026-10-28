@@ -5,6 +5,9 @@ const token = process.env["DISCORD_TOKEN"];
 const clientId = process.env["DISCORD_CLIENT_ID"];
 const guildId = process.env["DISCORD_GUILD_ID"];
 
+console.log("========================");
+console.log(token, clientId, guildId);
+
 if (!token || !clientId || !guildId) {
   throw new Error(
     "DISCORD_TOKEN, DISCORD_CLIENT_ID, and DISCORD_GUILD_ID must be set in .env",
@@ -15,6 +18,10 @@ const commands = [
   new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Check whether Heghinekilr Bot is alive!")
+    .toJSON(),
+  new SlashCommandBuilder()
+    .setName("silly")
+    .setDescription("Check whether Heghinekilr Bot is silly!")
     .toJSON(),
 ];
 
