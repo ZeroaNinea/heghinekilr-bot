@@ -1,8 +1,17 @@
-import { Sequelize } from "@sequelize/core";
-import { SqliteDialect } from "@sequelize/sqlite3";
+import { Sequelize } from "sequelize";
+// import { SqliteDialect } from "@sequelize/sqlite3";
+// import SQLite from "sqlite3";
 
-const sequelize = new Sequelize({
-  dialect: SqliteDialect,
+// export const sequelize = new Sequelize({
+//   dialect: SqliteDialect,
+//   storage: "sequelize.sqlite",
+//   // dialectOptions: {
+//   //   mode: SQLite.OPEN_READWRITE | SQLite.OPEN_CREATE | SQLite.OPEN_FULLMUTEX,
+//   // },
+// });
+
+export const sequelize = new Sequelize("", "", "", {
+  dialect: "sqlite",
   storage: "sequelize.sqlite",
 });
 
