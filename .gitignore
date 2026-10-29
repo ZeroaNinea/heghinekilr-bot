@@ -3,3 +3,4 @@
 .env
 sequelize.sqlite
 sequelize.sqlite-journal
+tyk-bans.json
