@@ -5,6 +5,7 @@ import { Client, Events, GatewayIntentBits, type Message } from "discord.js";
 import connection from "@/config/db.js";
 import { sequelize } from "@/config/db.js";
 import BanMessage from "@/models/BanMessage.js";
+import BanMessageAttachment from "@/models/BanMessageAttachment.js";
 
 const token = process.env["DISCORD_TOKEN"];
 const channelId = process.env["TYK_BAN_CHANNEL_ID"];
@@ -68,6 +69,25 @@ async function importMessages(): Promise<void> {
       await BanMessage.bulkCreate(rows, {
         ignoreDuplicates: true,
       });
+
+      const attachments = [...messages.values()].flatMap((message) =>
+        [...message.attachments.values()].map((attachment) => ({
+          message_id: message.id,
+          attachment_id: attachment.id,
+          filename: attachment.name,
+          url: attachment.url,
+          content_type: attachment.contentType,
+          size: attachment.size,
+        })),
+      );
+
+      if (attachments.length > 0) {
+        await BanMessageAttachment.bulkCreate(attachments, {
+          ignoreDuplicates: true,
+        });
+
+        console.log(`Found ${attachments.length} attachments in this batch.`);
+      }
 
       imported += messages.size;
 
