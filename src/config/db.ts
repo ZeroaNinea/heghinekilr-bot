@@ -1,27 +1,14 @@
 import { Sequelize } from "sequelize";
-// import { SqliteDialect } from "@sequelize/sqlite3";
-// import SQLite from "sqlite3";
 
-// export const sequelize = new Sequelize({
-//   dialect: SqliteDialect,
-//   storage: "sequelize.sqlite",
-//   // dialectOptions: {
-//   //   mode: SQLite.OPEN_READWRITE | SQLite.OPEN_CREATE | SQLite.OPEN_FULLMUTEX,
-//   // },
-// });
-
-export const sequelize = new Sequelize("", "", "", {
+export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "sequelize.sqlite",
+  logging: false,
 });
 
-async function connection() {
-  try {
-    await sequelize.authenticate();
-    console.log(" ✅ The database connocted!");
-  } catch (error) {
-    console.error(" ❌ Unable to connect to the database:", error);
-  }
+export async function connection(): Promise<void> {
+  await sequelize.authenticate();
+  console.log("✅ Database connected!");
 }
 
 export default connection;
