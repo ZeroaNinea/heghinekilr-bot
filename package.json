@@ -26,6 +26,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@sequelize/sqlite3": "^7.0.0-alpha.48",
     "discord.js": "^14.27.0",
     "dotenv": "^18.0.9",
     "sequelize": "^6.37.8",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "@types/sequelize": "^4.28.20",
     "sequelize-cli": "^6.6.5",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"

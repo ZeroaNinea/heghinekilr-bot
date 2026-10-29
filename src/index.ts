@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 
+import connection from "@/config/db.js";
+
 const token = process.env["DISCORD_TOKEN"];
 
 if (!token) {
@@ -14,6 +16,7 @@ const client = new Client({
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Logged in as ${readyClient.user.tag}`);
   console.log(`Bot ID: ${readyClient.user.id}`);
+  connection();
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
