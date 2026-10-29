@@ -4,9 +4,10 @@ import { sequelize } from "@/config/db.js";
 class BanMessage extends Model {
   declare id: number;
   declare guild_id: string;
+  declare channel_id: string;
   declare message_id: string;
   declare author_id: string;
-  declare banned_user_id: string | null;
+  declare user_id: string | null;
   declare message: string;
 }
 
@@ -21,6 +22,10 @@ BanMessage.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    channel_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     message_id: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -30,7 +35,7 @@ BanMessage.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    banned_user_id: {
+    user_id: {
       type: DataTypes.STRING,
       allowNull: true,
     },
