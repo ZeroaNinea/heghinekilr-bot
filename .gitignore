@@ -4,3 +4,4 @@
 sequelize.sqlite
 sequelize.sqlite-journal
 tyk-bans.json
+maki-ban-matches.json
