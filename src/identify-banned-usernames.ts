@@ -69,7 +69,7 @@ function getUsernameVariants(username: string): string[] {
   return [...variants];
 }
 
-async function identifyBanCases(): Promise<void> {
+async function identifyBannedUsernames(): Promise<void> {
   await connection();
   await sequelize.sync();
 
@@ -207,7 +207,7 @@ async function identifyBanCases(): Promise<void> {
   console.log("Report saved to username-match-report.json");
 }
 
-identifyBanCases().catch((error: unknown) => {
+identifyBannedUsernames().catch((error: unknown) => {
   console.error("Failed to identify usernames:", error);
   process.exitCode = 1;
 });
