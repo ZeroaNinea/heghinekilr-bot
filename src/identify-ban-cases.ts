@@ -11,18 +11,18 @@ function findUsernames(message: string): string[] {
 
   for (const match of message.matchAll(labelRegex)) {
     const start = (match.index ?? 0) + match[0].length;
-
-    // Stop at a closing parenthesis or line break, if present.
     const remainder = message.slice(start);
-    const end = remainder.search(/[)\r\n]/u);
+
+    // Stop at a sentence-ending period, "Reason:", closing parenthesis, or newline.
+    const end = remainder.search(/(?:\.\s+|\s+Reason\s*:|[)\r\n])/iu);
     const value = (end === -1 ? remainder : remainder.slice(0, end)).trim();
 
-    // Remove surrounding quotes/backticks, then split plural examples on "and".
     const cleaned = value.replace(/^[("'`]+|[)"'`]+$/gu, "");
+
     usernames.push(
       ...cleaned
         .split(/\s+and\s+/iu)
-        .map((name) => name.trim().replace(/[.,!?;:]+$/u, ""))
+        .map((name) => name.trim().replace(/[,!?;:]+$/u, ""))
         .filter(Boolean),
     );
   }
