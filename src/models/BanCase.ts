@@ -9,6 +9,7 @@ class BanCase extends Model {
   declare banned_id: string;
   declare reason: string;
   declare attachments: string[];
+  declare server_urls: string[];
 }
 
 BanCase.init(
@@ -38,7 +39,7 @@ BanCase.init(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    attachments: {
+    server_urls: {
       type: DataTypes.ARRAY(DataTypes.TEXT),
       allowNull: false,
       defaultValue: [],
