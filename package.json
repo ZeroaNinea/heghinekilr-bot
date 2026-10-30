@@ -11,6 +11,7 @@
     "import:ban-messages": "tsx src/import-ban-messages.ts",
     "import:tyk-bans": "tsx src/import-tyk-bans.ts",
     "search:maki-bans": "tsx src/search-maki-bans.ts",
+    "identify:ban-cases": "tsx src/identify-ban-cases.ts",
     "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
