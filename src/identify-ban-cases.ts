@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+
 const banCaseGroups: number[][] = [
   [1],
   [2],
@@ -112,4 +114,58 @@ function findUsernames(message: string): string[] {
   }
 
   return usernames;
+}
+
+interface UsernameMatchReport {
+  matched_users: {
+    user_id: string;
+    current_username: string;
+    historical_candidates: string[];
+    source_message_ids: string[];
+  }[];
+}
+
+interface HistoricalUsernames {
+  users: {
+    user_id: string;
+    current_username: string;
+    historical_names: {
+      value: string;
+      occurrences: {
+        value: string;
+        message_id: string;
+        message_url: string;
+        created_at: string;
+        embed_index: number;
+        field_index: number;
+      }[];
+    }[];
+    status: string;
+  }[];
+}
+
+interface TheRemainingUsernamesAndIds {
+  user_id: string;
+  username: string;
+  historical_usernames: string[];
+}
+
+async function identifyBanCases() {
+  const [
+    usernameMatchText,
+    historicalUsernamesText,
+    theRemainingUsernamesText,
+  ] = await Promise.all([
+    readFile("username-match-report", "utf8"),
+    readFile("historical-usernames.json", "utf8"),
+    readFile("the-remaining-usernames-and-ids.json", "utf8"),
+  ]);
+
+  const usernameMatch = JSON.parse(usernameMatchText) as UsernameMatchReport;
+  const historicalUsernames = JSON.parse(
+    historicalUsernamesText,
+  ) as HistoricalUsernames;
+  const theRemainingUsernamesAndIds = JSON.parse(
+    theRemainingUsernamesText,
+  ) as TheRemainingUsernamesAndIds;
 }
