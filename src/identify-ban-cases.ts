@@ -176,7 +176,7 @@ async function identifyBanCases() {
   ) as HistoricalUsernames;
   const theRemainingUsernamesAndIds = JSON.parse(
     theRemainingUsernamesText,
-  ) as TheRemainingUsernamesAndIds;
+  ) as TheRemainingUsernamesAndIds[];
 
   const banMessages = await BanMessage.findAll();
 
@@ -211,7 +211,44 @@ async function identifyBanCases() {
     messageGroup.forEach((message) => {
       guildIds.push(message.guild_id);
       bannedUsernames.push(...findUsernames(message.message));
-      message.user_id ? bannedIds.push(message.user_id) : null; // I'll continue this branch soon.
+      if (message.user_id) {
+        bannedIds.push(message.user_id);
+      } else {
+        usernameMatch.matched_users.forEach((user) => {
+          bannedUsernames.forEach((username) => {
+            if (
+              user.historical_candidates.includes(username) ||
+              user.current_username === username
+            ) {
+              bannedIds.push(user.user_id);
+            }
+          });
+        });
+
+        historicalUsernames.users.forEach((user) => {
+          bannedUsernames.forEach((username) => {
+            user.historical_names.forEach((historicalName) => {
+              if (
+                historicalName.value === username ||
+                user.current_username === username
+              ) {
+                bannedIds.push(user.user_id);
+              }
+            });
+          });
+        });
+
+        theRemainingUsernamesAndIds.forEach((user) => {
+          bannedUsernames.forEach((username) => {
+            if (
+              user.historical_usernames.includes(username) ||
+              user.username === username
+            ) {
+              bannedIds.push(user.user_id);
+            }
+          });
+        });
+      }
       banReason.push(message.message);
       sourceUrls.push(
         `https://discord.com/channels/${message.guild_id}/${message.channel_id}/${message.message_id}`,
