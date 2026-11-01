@@ -126,6 +126,7 @@ const banCaseGroups: number[][] = [
   [111],
   [112],
   [113],
+  [114],
 ];
 
 const banCases: IBanCase[] = [];
