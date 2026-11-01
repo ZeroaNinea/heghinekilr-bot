@@ -256,9 +256,7 @@ async function identifyBanCases() {
     });
 
     const uniqueGuildIds = [...new Set(guildIds)];
-    const uniqueBannedUsernames = [...new Set(bannedUsernames)]
-      .join("")
-      .split(", ");
+    const uniqueBannedUsernames = [...new Set(bannedUsernames)];
     const uniqueBannedIds = [...new Set(bannedIds)];
     const mergedReason = banReason.join("\n");
     const uniqueSourceUrls = [...new Set(sourceUrls)];
