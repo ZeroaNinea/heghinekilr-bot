@@ -14,6 +14,7 @@
     "identify:banned-usernames": "tsx src/identify-banned-usernames.ts",
     "search:unidentified-banned-users": "tsx src/find-unidentified-banned-users.ts",
     "extract:historical-usernames": "tsx src/extract-historical-usernames.ts",
+    "identify:ban-cases": "tsx src/identify-ban-cases.ts",
     "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

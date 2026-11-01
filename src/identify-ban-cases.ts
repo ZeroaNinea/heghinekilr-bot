@@ -1,5 +1,5 @@
 import connection, { sequelize } from "@/config/db.js";
-import BanMessage from "@/models/BanMessage.js";
+import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
 import BanCase from "@/models/BanCase.js";
 
 import { readFile } from "node:fs/promises";
@@ -179,4 +179,17 @@ async function identifyBanCases() {
   const banMessages = await BanMessage.findAll();
 
   BanCase.destroy({ where: {}, truncate: true });
+
+  banCaseGroups.map((banCaseGroup) => {
+    const messageGroup: IBanMessage[] = [];
+    banCaseGroup.map((messageId) => {
+      const banMessage = banMessages.find(
+        (message) => message.id === messageId,
+      );
+
+      if (banMessage) messageGroup.push(banMessage);
+    });
+
+    console.log(messageGroup);
+  });
 }

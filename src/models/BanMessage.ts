@@ -1,6 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "@/config/db.js";
 
+export interface IBanMessage {
+  id: number;
+  guild_id: string;
+  channel_id: string;
+  message_id: string;
+  author_id: string;
+  user_id: string | null;
+  message: string;
+}
+
 class BanMessage extends Model {
   declare id: number;
   declare guild_id: string;
