@@ -1,6 +1,6 @@
 import connection, { sequelize } from "@/config/db.js";
 import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
-import BanCase from "@/models/BanCase.js";
+import BanCase, { type IBanCase } from "@/models/BanCase.js";
 
 import { readFile } from "node:fs/promises";
 
@@ -128,6 +128,8 @@ const banCaseGroups: number[][] = [
   [112],
 ];
 
+const banCases: IBanCase[] = [];
+
 const labelRegex = /(?:usernames?|ūzrnāmz?)\s*:\s*/giu;
 
 function findUsernames(message: string): string[] {
@@ -163,7 +165,7 @@ async function identifyBanCases() {
     historicalUsernamesText,
     theRemainingUsernamesText,
   ] = await Promise.all([
-    readFile("username-match-report", "utf8"),
+    readFile("username-match-report.json", "utf8"),
     readFile("historical-usernames.json", "utf8"),
     readFile("the-remaining-usernames-and-ids.json", "utf8"),
   ]);
@@ -180,6 +182,8 @@ async function identifyBanCases() {
 
   BanCase.destroy({ where: {}, truncate: true });
 
+  const messageGroups: IBanMessage[][] = [];
+
   banCaseGroups.map((banCaseGroup) => {
     const messageGroup: IBanMessage[] = [];
     banCaseGroup.map((messageId) => {
@@ -190,6 +194,50 @@ async function identifyBanCases() {
       if (banMessage) messageGroup.push(banMessage);
     });
 
-    console.log(messageGroup);
+    // console.log(messageGroup);
+
+    messageGroups.push(messageGroup);
   });
+
+  messageGroups.forEach((messageGroup, index) => {
+    const id: number = index;
+    const guildIds: string[] = [];
+    const authorId: string = messageGroup[0]?.author_id || "";
+    const bannedUsernames: string[] = [];
+    const bannedIds: string[] = [];
+    const banReason: string[] = [];
+    const sourceUrls: string[] = [];
+
+    messageGroup.forEach((message) => {
+      guildIds.push(message.guild_id);
+      bannedUsernames.push(...findUsernames(message.message));
+      message.user_id ? bannedIds.push(message.user_id) : null; // I'll continue this branch soon.
+      banReason.push(message.message);
+      sourceUrls.push(
+        `https://discord.com/channels/${message.guild_id}/${message.channel_id}/${message.message_id}`,
+      );
+    });
+
+    const uniqueGuildIds = [...new Set(guildIds)];
+    const uniqueBannedUsernames = [...new Set(bannedUsernames)]
+      .join("")
+      .split(", ");
+    const uniqueBannedIds = [...new Set(bannedIds)];
+    const mergedReason = banReason.join("\n");
+    const uniqueSourceUrls = [...new Set(sourceUrls)];
+
+    banCases.push({
+      id: id,
+      guild_ids: uniqueGuildIds,
+      author_id: authorId,
+      banned_usernames: uniqueBannedUsernames,
+      banned_ids: uniqueBannedIds,
+      reason: mergedReason,
+      source_urls: uniqueSourceUrls,
+    });
+  });
+
+  console.log(banCases);
 }
+
+identifyBanCases();

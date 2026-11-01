@@ -1,12 +1,22 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "@/config/db.js";
 
+export interface IBanCase {
+  id: number;
+  guild_ids: string[];
+  author_id: string;
+  banned_usernames: string[];
+  banned_ids: string[];
+  reason: string;
+  source_urls: string[];
+}
+
 class BanCase extends Model {
   declare id: number;
-  declare guild_id: string[];
+  declare guild_ids: string[];
   declare author_id: string;
-  declare banned_username: string[];
-  declare banned_id: string[];
+  declare banned_usernames: string[];
+  declare banned_ids: string[];
   declare reason: string;
   declare source_urls: string[];
 }
@@ -18,7 +28,7 @@ BanCase.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    guild_id: {
+    guild_ids: {
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
@@ -27,12 +37,12 @@ BanCase.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    banned_username: {
+    banned_usernames: {
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
-    banned_id: {
+    banned_ids: {
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
