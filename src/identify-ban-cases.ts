@@ -125,6 +125,7 @@ const banCaseGroups: number[][] = [
   [110],
   [111],
   [112],
+  [113],
 ];
 
 const banCases: IBanCase[] = [];
@@ -179,7 +180,7 @@ async function identifyBanCases() {
 
   const banMessages = await BanMessage.findAll();
 
-  BanCase.destroy({ where: {}, truncate: true });
+  // BanCase.destroy({ where: {}, truncate: true });
 
   const messageGroups: IBanMessage[][] = [];
 
