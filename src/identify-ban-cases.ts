@@ -78,9 +78,8 @@ const banCaseGroups: number[][] = [
   [55],
   [56],
   [57],
-  [58],
-  [59],
-  [60],
+  [59, 58],
+  [60, 58],
   [61],
   [62],
   [63],
@@ -130,7 +129,7 @@ const banCaseGroups: number[][] = [
 
 const banCases: IBanCase[] = [];
 
-const labelRegex = /(?:usernames?|ūzrnāmz?)\s*:\s*/giu;
+const labelRegex = /(?:usernames?|[ūǓ]zrnāmz?)\s*:\s*/giu;
 
 function findUsernames(message: string): string[] {
   const usernames: string[] = [];
