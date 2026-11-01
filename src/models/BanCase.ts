@@ -3,12 +3,12 @@ import { sequelize } from "@/config/db.js";
 
 class BanCase extends Model {
   declare id: number;
-  declare guild_id: string;
+  declare guild_id: string[];
   declare author_id: string;
   declare banned_username: string[];
   declare banned_id: string[];
   declare reason: string;
-  declare server_urls: string[];
+  declare source_urls: string[];
 }
 
 BanCase.init(
@@ -19,8 +19,9 @@ BanCase.init(
       autoIncrement: true,
     },
     guild_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
+      defaultValue: [],
     },
     author_id: {
       type: DataTypes.STRING,
