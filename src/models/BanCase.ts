@@ -5,10 +5,9 @@ class BanCase extends Model {
   declare id: number;
   declare guild_id: string;
   declare author_id: string;
-  declare banned_username: string;
-  declare banned_id: string;
+  declare banned_username: string[];
+  declare banned_id: string[];
   declare reason: string;
-  declare attachments: string[];
   declare server_urls: string[];
 }
 
@@ -28,19 +27,21 @@ BanCase.init(
       allowNull: false,
     },
     banned_username: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
+      defaultValue: [],
     },
     banned_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON,
       allowNull: false,
+      defaultValue: [],
     },
     reason: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     server_urls: {
-      type: DataTypes.ARRAY(DataTypes.TEXT),
+      type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
