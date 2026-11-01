@@ -1,4 +1,42 @@
+import connection, { sequelize } from "@/config/db.js";
+import BanMessage from "@/models/BanMessage.js";
+import BanCase from "@/models/BanCase.js";
+
 import { readFile } from "node:fs/promises";
+
+interface UsernameMatchReport {
+  matched_users: {
+    user_id: string;
+    current_username: string;
+    historical_candidates: string[];
+    source_message_ids: string[];
+  }[];
+}
+
+interface HistoricalUsernames {
+  users: {
+    user_id: string;
+    current_username: string;
+    historical_names: {
+      value: string;
+      occurrences: {
+        value: string;
+        message_id: string;
+        message_url: string;
+        created_at: string;
+        embed_index: number;
+        field_index: number;
+      }[];
+    }[];
+    status: string;
+  }[];
+}
+
+interface TheRemainingUsernamesAndIds {
+  user_id: string;
+  username: string;
+  historical_usernames: string[];
+}
 
 const banCaseGroups: number[][] = [
   [1],
@@ -116,41 +154,10 @@ function findUsernames(message: string): string[] {
   return usernames;
 }
 
-interface UsernameMatchReport {
-  matched_users: {
-    user_id: string;
-    current_username: string;
-    historical_candidates: string[];
-    source_message_ids: string[];
-  }[];
-}
-
-interface HistoricalUsernames {
-  users: {
-    user_id: string;
-    current_username: string;
-    historical_names: {
-      value: string;
-      occurrences: {
-        value: string;
-        message_id: string;
-        message_url: string;
-        created_at: string;
-        embed_index: number;
-        field_index: number;
-      }[];
-    }[];
-    status: string;
-  }[];
-}
-
-interface TheRemainingUsernamesAndIds {
-  user_id: string;
-  username: string;
-  historical_usernames: string[];
-}
-
 async function identifyBanCases() {
+  connection();
+  sequelize.sync();
+
   const [
     usernameMatchText,
     historicalUsernamesText,
@@ -168,4 +175,8 @@ async function identifyBanCases() {
   const theRemainingUsernamesAndIds = JSON.parse(
     theRemainingUsernamesText,
   ) as TheRemainingUsernamesAndIds;
+
+  const banMessages = await BanMessage.findAll();
+
+  BanCase.destroy({ where: {}, truncate: true });
 }
