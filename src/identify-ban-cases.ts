@@ -1,8 +1,8 @@
+import { readFile, writeFile } from "node:fs/promises";
+
 import connection, { sequelize } from "@/config/db.js";
 import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
 import BanCase, { type IBanCase } from "@/models/BanCase.js";
-
-import { readFile } from "node:fs/promises";
 
 interface UsernameMatchReport {
   matched_users: {
@@ -274,7 +274,9 @@ async function identifyBanCases() {
     });
   });
 
-  console.log(banCases);
+  // console.log(banCases);
+
+  await writeFile("ban-cases.json", JSON.stringify(banCases, null, 2), "utf8");
 }
 
 identifyBanCases();
