@@ -2,7 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 
 import connection, { sequelize } from "@/config/db.js";
 import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
-import BanCase, { type IBanCase } from "@/models/BanCase.js";
+import { type IBanCase } from "@/models/BanCase.js";
 
 interface UsernameMatchReport {
   matched_users: {

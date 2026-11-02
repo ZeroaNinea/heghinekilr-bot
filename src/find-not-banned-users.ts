@@ -3,7 +3,7 @@ import "dotenv/config";
 import { writeFile } from "node:fs/promises";
 import { Client, Events, GatewayIntentBits, type Message } from "discord.js";
 
-import usernames from "usernames.js";
+import usernames from "./usernames.js";
 
 const token = process.env["DISCORD_TOKEN"];
 const channelId = process.env["TYK_LOG_CHANNEL_ID"];
