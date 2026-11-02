@@ -11,3 +11,5 @@ historical-usernames.json
 the-remaining-usernames-and-ids.json
 ban-cases.json
 unidentified-users.json
+src/usernames.ts
+maki-username-search.json

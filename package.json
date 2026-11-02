@@ -13,6 +13,7 @@
     "search:maki-bans": "tsx src/search-maki-bans.ts",
     "identify:banned-usernames": "tsx src/identify-banned-usernames.ts",
     "search:unidentified-banned-users": "tsx src/find-unidentified-banned-users.ts",
+    "search:not-banned-users": "tsx src/find-not-banned-users.ts",
     "extract:historical-usernames": "tsx src/extract-historical-usernames.ts",
     "identify:ban-cases": "tsx src/identify-ban-cases.ts",
     "compare:present-ids": "tsx src/compare-present-ids.ts",
