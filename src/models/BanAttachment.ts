@@ -3,7 +3,7 @@ import { sequelize } from "@/config/db.js";
 
 class BanAttachment extends Model {
   declare id: number;
-  declare case_id: string;
+  declare case_id: number;
   declare attachment_id: string;
   declare filename: string;
   declare url: string;
@@ -19,7 +19,7 @@ BanAttachment.init(
       autoIncrement: true,
     },
     case_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     attachment_id: {

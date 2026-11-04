@@ -2,7 +2,8 @@ import { readFile, writeFile } from "node:fs/promises";
 
 import connection, { sequelize } from "@/config/db.js";
 import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
-import { type IBanCase } from "@/models/BanCase.js";
+import BanCase, { type IBanCase } from "@/models/BanCase.js";
+import BanAttachment from "@/models/BanAttachment.js";
 
 interface UsernameMatchReport {
   matched_users: {
@@ -263,6 +264,15 @@ async function identifyBanCases() {
 
     banCases.push({
       id: id,
+      guild_ids: uniqueGuildIds,
+      author_id: authorId,
+      banned_usernames: uniqueBannedUsernames,
+      banned_ids: uniqueBannedIds,
+      reason: mergedReason,
+      source_urls: uniqueSourceUrls,
+    });
+
+    BanCase.create({
       guild_ids: uniqueGuildIds,
       author_id: authorId,
       banned_usernames: uniqueBannedUsernames,
