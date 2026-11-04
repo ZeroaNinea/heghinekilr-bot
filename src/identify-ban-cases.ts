@@ -188,40 +188,6 @@ async function identifyBanCases() {
 
   const messageGroups: IBanMessage[][] = [];
 
-  // banCaseGroups.forEach((banCaseGroup, index) => {
-  //   const messageGroup: IBanMessage[] = [];
-
-  //   banCaseGroup.forEach(async (messageId) => {
-  //     const banMessage = banMessages.find(
-  //       (message) => message.id === messageId,
-  //     );
-
-  //     const attachment = banMessageAttachments.find(
-  //       (attachment) => attachment.message_id === banMessage?.message_id,
-  //     );
-
-  //     // console.log(attachment);
-
-  //     if (attachment) {
-  //       await BanAttachment.create({
-  //         case_id: index + 1,
-  //         message_id: attachment.message_id,
-  //         attachment_id: attachment.attachment_id,
-  //         filename: attachment.filename,
-  //         url: attachment.url,
-  //         content_type: attachment.content_type,
-  //         size: attachment.size,
-  //       });
-  //     }
-
-  //     if (banMessage) messageGroup.push(banMessage);
-  //   });
-
-  //   // console.log(messageGroup);
-
-  //   messageGroups.push(messageGroup);
-  // });
-
   for (const [index, banCaseGroup] of banCaseGroups.entries()) {
     const messageGroup: IBanMessage[] = [];
 
