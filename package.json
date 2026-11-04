@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "start:dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "register:commands": "tsx src/register-commands.ts",
     "import:ban-messages": "tsx src/import-ban-messages.ts",
     "import:tyk-bans": "tsx src/import-tyk-bans.ts",
@@ -44,6 +44,7 @@
     "@types/node": "^26.6.5",
     "@types/sequelize": "^4.28.20",
     "sequelize-cli": "^6.6.5",
+    "tsc-alias": "^1.9.10",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },

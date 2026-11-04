@@ -4,6 +4,7 @@ import { sequelize } from "@/config/db.js";
 class BanAttachment extends Model {
   declare id: number;
   declare case_id: number;
+  declare message_id: string;
   declare attachment_id: string;
   declare filename: string;
   declare url: string;
@@ -20,6 +21,10 @@ BanAttachment.init(
     },
     case_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    message_id: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     attachment_id: {

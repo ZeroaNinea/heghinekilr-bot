@@ -4,6 +4,7 @@ import connection, { sequelize } from "@/config/db.js";
 import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
 import BanCase, { type IBanCase } from "@/models/BanCase.js";
 import BanAttachment from "@/models/BanAttachment.js";
+import BanMessageAttachment from "@/models/BanMessageAttachment.js";
 
 interface UsernameMatchReport {
   matched_users: {
@@ -129,7 +130,7 @@ const banCaseGroups: number[][] = [
   [113],
 ];
 
-const banCases: IBanCase[] = [];
+// const banCases: IBanCase[] = [];
 
 const labelRegex = /(?:usernames?|[ūǓ]zrnāmz?)\s*:\s*/giu;
 
@@ -159,7 +160,7 @@ function findUsernames(message: string): string[] {
 
 async function identifyBanCases() {
   connection();
-  sequelize.sync();
+  await sequelize.sync({ alter: true });
 
   const [
     usernameMatchText,
@@ -180,17 +181,38 @@ async function identifyBanCases() {
   ) as TheRemainingUsernamesAndIds[];
 
   const banMessages = await BanMessage.findAll();
+  const banMessageAttachments = await BanMessageAttachment.findAll();
 
-  // BanCase.destroy({ where: {}, truncate: true });
+  BanCase.destroy({ where: {}, truncate: true });
+  BanAttachment.destroy({ where: {}, truncate: true });
 
   const messageGroups: IBanMessage[][] = [];
 
-  banCaseGroups.map((banCaseGroup) => {
+  banCaseGroups.map((banCaseGroup, index) => {
     const messageGroup: IBanMessage[] = [];
-    banCaseGroup.map((messageId) => {
+
+    banCaseGroup.map(async (messageId) => {
       const banMessage = banMessages.find(
         (message) => message.id === messageId,
       );
+
+      const attachment = banMessageAttachments.find(
+        (attachment) => attachment.message_id === banMessage?.message_id,
+      );
+
+      // console.log(attachment);
+
+      if (attachment) {
+        await BanAttachment.create({
+          case_id: index + 1,
+          message_id: attachment.message_id,
+          attachment_id: attachment.attachment_id,
+          filename: attachment.filename,
+          url: attachment.url,
+          content_type: attachment.content_type,
+          size: attachment.size,
+        });
+      }
 
       if (banMessage) messageGroup.push(banMessage);
     });
@@ -200,8 +222,8 @@ async function identifyBanCases() {
     messageGroups.push(messageGroup);
   });
 
-  messageGroups.forEach((messageGroup, index) => {
-    const id: number = index;
+  messageGroups.forEach(async (messageGroup) => {
+    // const id: number = index;
     const guildIds: string[] = [];
     const authorId: string = messageGroup[0]?.author_id || "";
     const bannedUsernames: string[] = [];
@@ -262,29 +284,29 @@ async function identifyBanCases() {
     const mergedReason = banReason.join("\n");
     const uniqueSourceUrls = [...new Set(sourceUrls)];
 
-    banCases.push({
-      id: id,
-      guild_ids: uniqueGuildIds,
-      author_id: authorId,
-      banned_usernames: uniqueBannedUsernames,
-      banned_ids: uniqueBannedIds,
-      reason: mergedReason,
-      source_urls: uniqueSourceUrls,
-    });
+    // banCases.push({
+    //   id: id,
+    //   guild_ids: uniqueGuildIds,
+    //   author_id: authorId,
+    //   banned_usernames: uniqueBannedUsernames,
+    //   banned_ids: uniqueBannedIds,
+    //   reason: mergedReason,
+    //   source_urls: uniqueSourceUrls,
+    // });
 
-    BanCase.create({
+    await BanCase.create({
       guild_ids: uniqueGuildIds,
       author_id: authorId,
       banned_usernames: uniqueBannedUsernames,
       banned_ids: uniqueBannedIds,
       reason: mergedReason,
-      source_urls: uniqueSourceUrls,
+      server_urls: uniqueSourceUrls,
     });
   });
 
   // console.log(banCases);
 
-  await writeFile("ban-cases.json", JSON.stringify(banCases, null, 2), "utf8");
+  // await writeFile("ban-cases.json", JSON.stringify(banCases, null, 2), "utf8");
 }
 
 identifyBanCases();

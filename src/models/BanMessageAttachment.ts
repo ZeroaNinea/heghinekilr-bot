@@ -1,6 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "@/config/db.js";
 
+export interface IBanMessageAttachment {
+  id: number;
+  message_id: string;
+  attachment_id: string;
+  filename: string;
+  url: string;
+  content_type: string | null;
+  size: number;
+}
+
 class BanMessageAttachment extends Model {
   declare id: number;
   declare message_id: string;
