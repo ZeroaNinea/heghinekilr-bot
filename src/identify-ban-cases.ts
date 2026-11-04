@@ -1,8 +1,8 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 
 import connection, { sequelize } from "@/config/db.js";
 import BanMessage, { type IBanMessage } from "@/models/BanMessage.js";
-import BanCase, { type IBanCase } from "@/models/BanCase.js";
+import BanCase from "@/models/BanCase.js";
 import BanAttachment from "@/models/BanAttachment.js";
 import BanMessageAttachment from "@/models/BanMessageAttachment.js";
 
@@ -188,21 +188,55 @@ async function identifyBanCases() {
 
   const messageGroups: IBanMessage[][] = [];
 
-  banCaseGroups.map((banCaseGroup, index) => {
+  // banCaseGroups.forEach((banCaseGroup, index) => {
+  //   const messageGroup: IBanMessage[] = [];
+
+  //   banCaseGroup.forEach(async (messageId) => {
+  //     const banMessage = banMessages.find(
+  //       (message) => message.id === messageId,
+  //     );
+
+  //     const attachment = banMessageAttachments.find(
+  //       (attachment) => attachment.message_id === banMessage?.message_id,
+  //     );
+
+  //     // console.log(attachment);
+
+  //     if (attachment) {
+  //       await BanAttachment.create({
+  //         case_id: index + 1,
+  //         message_id: attachment.message_id,
+  //         attachment_id: attachment.attachment_id,
+  //         filename: attachment.filename,
+  //         url: attachment.url,
+  //         content_type: attachment.content_type,
+  //         size: attachment.size,
+  //       });
+  //     }
+
+  //     if (banMessage) messageGroup.push(banMessage);
+  //   });
+
+  //   // console.log(messageGroup);
+
+  //   messageGroups.push(messageGroup);
+  // });
+
+  for (const [index, banCaseGroup] of banCaseGroups.entries()) {
     const messageGroup: IBanMessage[] = [];
 
-    banCaseGroup.map(async (messageId) => {
+    for (const messageId of banCaseGroup) {
       const banMessage = banMessages.find(
         (message) => message.id === messageId,
       );
 
-      const attachment = banMessageAttachments.find(
-        (attachment) => attachment.message_id === banMessage?.message_id,
+      if (!banMessage) continue;
+
+      const attachments = banMessageAttachments.filter(
+        (attachment) => attachment.message_id === banMessage.message_id,
       );
 
-      // console.log(attachment);
-
-      if (attachment) {
+      for (const attachment of attachments) {
         await BanAttachment.create({
           case_id: index + 1,
           message_id: attachment.message_id,
@@ -214,13 +248,11 @@ async function identifyBanCases() {
         });
       }
 
-      if (banMessage) messageGroup.push(banMessage);
-    });
-
-    // console.log(messageGroup);
+      messageGroup.push(banMessage);
+    }
 
     messageGroups.push(messageGroup);
-  });
+  }
 
   messageGroups.forEach(async (messageGroup) => {
     // const id: number = index;
