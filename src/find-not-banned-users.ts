@@ -38,6 +38,7 @@ const client = new Client({
 function getSearchableText(message: Message): string {
   const parts = [message.content];
 
+  // Ordinary embeds
   for (const embed of message.embeds) {
     parts.push(
       embed.title ?? "",
@@ -49,6 +50,45 @@ function getSearchableText(message: Message): string {
     for (const field of embed.fields) {
       parts.push(field.name, field.value);
     }
+  }
+
+  // Discord Components V2
+  function extractComponentText(component: any): void {
+    if (typeof component.content === "string") {
+      parts.push(component.content);
+    }
+
+    if (typeof component.label === "string") {
+      parts.push(component.label);
+    }
+
+    if (typeof component.placeholder === "string") {
+      parts.push(component.placeholder);
+    }
+
+    if (typeof component.description === "string") {
+      parts.push(component.description);
+    }
+
+    if (typeof component.title === "string") {
+      parts.push(component.title);
+    }
+
+    if (Array.isArray(component.components)) {
+      for (const child of component.components) {
+        extractComponentText(child);
+      }
+    }
+
+    if (Array.isArray(component.items)) {
+      for (const child of component.items) {
+        extractComponentText(child);
+      }
+    }
+  }
+
+  for (const component of message.components) {
+    extractComponentText(component.toJSON());
   }
 
   return parts.join("\n");
@@ -66,12 +106,19 @@ async function searchMakiLogs(): Promise<void> {
     throw new Error("The configured log channel is not a server text channel.");
   }
 
+  console.log("Searching channel:");
+  console.log("Name:", channel.name);
+  console.log("ID:", channel.id);
+  console.log("Guild ID:", channel.guildId);
+
   const matches: LogMatch[] = [];
 
   let before: string | undefined;
   let scanned = 0;
 
   console.log(`Searching for ${usernames.length} usernames...`);
+
+  // let firstMakiLog: Message | null = null;
 
   while (true) {
     const messages = await channel.messages.fetch({
@@ -84,7 +131,27 @@ async function searchMakiLogs(): Promise<void> {
     }
 
     for (const message of messages.values()) {
-      const searchableText = getSearchableText(message).toLowerCase();
+      // if (message.author.id === "1362250089497628844") {
+      //   if (
+      //     !firstMakiLog ||
+      //     message.createdTimestamp < firstMakiLog.createdTimestamp
+      //   ) {
+      //     firstMakiLog = message;
+      //   }
+      // }
+
+      // if (firstMakiLog) {
+      //   console.log("\nFirst Maki log found:");
+      //   console.log("Message ID:", firstMakiLog.id);
+      //   console.log("Date:", firstMakiLog.createdAt.toISOString());
+      //   console.log("URL:", firstMakiLog.url);
+      // } else {
+      //   console.log("No Maki messages found.");
+      // }
+
+      const searchableText = getSearchableText(message)
+        .replace(/\\_/gu, "_")
+        .toLowerCase();
 
       for (const username of usernames) {
         if (!searchableText.includes(username.toLowerCase())) {
